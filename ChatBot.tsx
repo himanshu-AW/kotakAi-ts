@@ -17,6 +17,7 @@ import {
   Animated,
   Dimensions,
   Pressable,
+  Easing,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 // import { KBTag, KBPressable } from 'kb-core/src/kbcomponentsV2';
@@ -471,6 +472,46 @@ const ChatModal: React.FC<ChatModalProps> = ({
     );
   };
 
+
+const FeedbackToast = ({
+  message,
+  visible,
+}: {
+  message: string;
+  visible: boolean;
+}) => {
+  const opacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (visible) {
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 200,
+        easing: Easing.inOut(Easing.ease),
+        useNativeDriver: true,
+      }).start(() => {
+        setTimeout(() => {
+          Animated.timing(opacity, {
+            toValue: 0,
+            duration: 300,
+            easing: Easing.inOut(Easing.ease),
+            useNativeDriver: true,
+          }).start();
+        }, 2000);
+      });
+    }
+  }, [visible]);
+
+  if (!visible) return null;
+
+  return (
+    <Animated.View style={[styles.toast, { opacity }]}>
+      <Text style={styles.toastText}>{message}</Text>
+    </Animated.View>
+  );
+};
+
+
   return (
     <Modal
       visible={visible}
@@ -841,6 +882,20 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
   },
+
+  toast: {
+        backgroundColor: '#323232',
+        height: 48,
+        padding: 12,
+        marginBottom: 16,
+        width: '90%',
+        marginHorizontal: 'auto',
+        borderRadius: 4,
+    },
+    toastText: {
+        color: "#fff",
+        fontSize: 14,
+    },
 });
 
 export default ChatModal;
