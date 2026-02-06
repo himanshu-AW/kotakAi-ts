@@ -9,7 +9,7 @@ import ChatBot from './ChatBot';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
-  const [showChatBot, setShowChatBot] = useState(false);
+  const [showChatBot, setShowChatBot] = useState(true);
 
   const scrollY = useSharedValue(0);
   const onScroll = useAnimatedScrollHandler({
